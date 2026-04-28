@@ -26,6 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 const EXTRACHILL_DOCS_LAST_REVIEWED_META_KEY = '_ec_doc_last_reviewed';
 
 add_action( 'init', 'extrachill_docs_register_last_reviewed_meta' );
+add_action( 'enqueue_block_editor_assets', 'extrachill_docs_enqueue_last_reviewed_sidebar' );
 
 /**
  * Registers `_ec_doc_last_reviewed` post meta on the ec_doc post type.
@@ -75,4 +76,42 @@ function extrachill_docs_sanitize_last_reviewed_date( $value ) {
 	}
 
 	return $value;
+}
+
+/**
+ * Enqueues the Gutenberg sidebar panel script on ec_doc edit screens.
+ *
+ * No build step: hand-written ES module that consumes WP globals.
+ *
+ * @since 0.5.0
+ * @return void
+ */
+function extrachill_docs_enqueue_last_reviewed_sidebar() {
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( ! $screen || 'ec_doc' !== $screen->post_type ) {
+		return;
+	}
+
+	$script_path = EXTRACHILL_DOCS_PLUGIN_DIR . 'assets/js/last-reviewed-sidebar.js';
+	if ( ! file_exists( $script_path ) ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'extrachill-docs-last-reviewed-sidebar',
+		EXTRACHILL_DOCS_PLUGIN_URL . 'assets/js/last-reviewed-sidebar.js',
+		array(
+			'wp-element',
+			'wp-plugins',
+			'wp-edit-post',
+			'wp-components',
+			'wp-data',
+			'wp-i18n',
+			'wp-compose',
+		),
+		filemtime( $script_path ),
+		true
+	);
+
+	wp_set_script_translations( 'extrachill-docs-last-reviewed-sidebar', 'extrachill-docs' );
 }
