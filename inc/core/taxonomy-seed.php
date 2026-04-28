@@ -3,14 +3,32 @@
  * Documentation Platform Taxonomy Seeding
  *
  * Seeds ec_doc_platform terms on plugin activation, derived from the
- * canonical network site map in extrachill-multisite.
+ * canonical network site map in extrachill-multisite plus a small list of
+ * cross-cutting platforms that don't map 1:1 to a single network site.
  *
  * Source of truth: ec_get_blog_ids() in extrachill-multisite/inc/core/blog-ids.php.
- * Each slug maps to ec_docs/{slug}/ for markdown source and the corresponding
- * network site for docs-info API calls.
+ * Each network slug maps to ec_docs/{slug}/ for markdown source and the
+ * corresponding network site for docs-info API calls.
  *
  * Sites excluded from seeding:
  * - docs (this site doesn't document itself)
+ *
+ * Cross-cutting platforms (not network sites) seeded explicitly:
+ * - account (auth, profile, privacy — spans the whole network)
+ *
+ * Platform mapping:
+ *
+ * | Slug       | Source                | Notes                              |
+ * |------------|-----------------------|------------------------------------|
+ * | main       | ec_get_blog_ids()     | extrachill.com (Blog)              |
+ * | community  | ec_get_blog_ids()     | community.extrachill.com           |
+ * | shop       | ec_get_blog_ids()     | shop.extrachill.com                |
+ * | artist     | ec_get_blog_ids()     | artist.extrachill.com              |
+ * | events     | ec_get_blog_ids()     | events.extrachill.com              |
+ * | newsletter | ec_get_blog_ids()     | newsletter.extrachill.com          |
+ * | wire       | ec_get_blog_ids()     | wire.extrachill.com                |
+ * | studio     | ec_get_blog_ids()     | studio.extrachill.com              |
+ * | account    | cross-cutting         | network-wide auth/profile/privacy  |
  *
  * Custom terms (e.g. 'chat' for AI chat docs) can be created manually
  * outside the seed function.
@@ -41,34 +59,39 @@ function extrachill_docs_get_platform_label( string $slug ): string {
 		'newsletter' => 'Newsletter',
 		'wire'       => 'News Wire',
 		'studio'     => 'Studio',
+		'account'    => 'Account',
 	);
 
 	return $labels[ $slug ] ?? ucfirst( $slug );
 }
 
 /**
- * Get the list of blog slugs to seed as platform terms.
+ * Get the list of platform slugs to seed as terms.
  *
- * Derives from ec_get_blog_ids(), excluding sites that shouldn't have
- * their own platform term (e.g. docs itself).
+ * Derives network platforms from ec_get_blog_ids() (excluding sites that
+ * shouldn't have their own platform term, e.g. docs itself), then appends
+ * cross-cutting platforms that don't map 1:1 to a network site.
  *
  * @since 0.4.0
  *
- * @return string[] Array of canonical blog slugs.
+ * @return string[] Array of platform slugs.
  */
 function extrachill_docs_get_seed_slugs(): array {
-	if ( ! function_exists( 'ec_get_blog_ids' ) ) {
-		// Fallback: no multisite plugin, seed nothing.
-		return array();
-	}
-
 	$exclude = array(
 		'docs', // This site doesn't document itself.
 	);
 
-	$slugs = array_keys( ec_get_blog_ids() );
+	$network_slugs = array();
+	if ( function_exists( 'ec_get_blog_ids' ) ) {
+		$network_slugs = array_values( array_diff( array_keys( ec_get_blog_ids() ), $exclude ) );
+	}
 
-	return array_values( array_diff( $slugs, $exclude ) );
+	// Cross-cutting platforms (not 1:1 with a network site).
+	$cross_cutting = array(
+		'account', // Network-wide auth, profile, and privacy docs.
+	);
+
+	return array_values( array_unique( array_merge( $network_slugs, $cross_cutting ) ) );
 }
 
 /**
