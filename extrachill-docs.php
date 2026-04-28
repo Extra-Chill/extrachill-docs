@@ -45,6 +45,9 @@ require_once EXTRACHILL_DOCS_PLUGIN_DIR . 'inc/core/filters.php';
 // Sidebar integration.
 require_once EXTRACHILL_DOCS_PLUGIN_DIR . 'inc/core/sidebar.php';
 
+// Last reviewed date (post meta + editor sidebar + admin column).
+require_once EXTRACHILL_DOCS_PLUGIN_DIR . 'inc/core/last-reviewed.php';
+
 // Custom rewrite rules for /{platform}/{doc}/ URL structure.
 require_once EXTRACHILL_DOCS_PLUGIN_DIR . 'inc/core/rewrite-rules.php';
 
