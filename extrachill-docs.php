@@ -48,6 +48,9 @@ require_once EXTRACHILL_DOCS_PLUGIN_DIR . 'inc/core/sidebar.php';
 // Custom rewrite rules for /{platform}/{doc}/ URL structure.
 require_once EXTRACHILL_DOCS_PLUGIN_DIR . 'inc/core/rewrite-rules.php';
 
+// Abilities API integration.
+require_once EXTRACHILL_DOCS_PLUGIN_DIR . 'inc/abilities/register.php';
+
 register_activation_hook( __FILE__, 'extrachill_docs_activate' );
 
 /**
