@@ -1,6 +1,6 @@
 <?php
 /**
- * ec_doc → Hierarchical Page Migration
+ * Ec_doc → Hierarchical Page Migration
  *
  * One-shot WP-CLI command that converts the existing ec_doc posts on
  * docs.extrachill.com into hierarchical WordPress pages using the same
@@ -158,10 +158,10 @@ function extrachill_docs_migration_migrate_one( \WP_Post $ec_doc, bool $dry_run 
 		return $row;
 	}
 
-	$term         = $terms[0];
-	$parent_slug  = (string) $term->slug;
-	$repo_map     = extrachill_docs_migration_term_to_repo_map();
-	$source_repo  = $repo_map[ $parent_slug ] ?? '';
+	$term        = $terms[0];
+	$parent_slug = (string) $term->slug;
+	$repo_map    = extrachill_docs_migration_term_to_repo_map();
+	$source_repo = $repo_map[ $parent_slug ] ?? '';
 
 	if ( '' === $source_repo ) {
 		$row['action'] = 'error';

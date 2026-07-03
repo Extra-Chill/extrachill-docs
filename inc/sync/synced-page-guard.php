@@ -114,6 +114,7 @@ function extrachill_docs_synced_page_admin_notice(): void {
 		esc_html( $prefix ),
 		esc_html( $suffix ),
 		esc_url( $github_url ),
+		/* translators: %s: source file path in the docs repository. */
 		esc_html( sprintf( __( 'Open %s on GitHub →', 'extrachill-docs' ), $source_path ) )
 	);
 }
