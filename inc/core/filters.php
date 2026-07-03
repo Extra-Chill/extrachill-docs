@@ -78,7 +78,8 @@ add_filter(
 // Override back-to-home label for documentation site.
 add_filter(
 	'extrachill_back_to_home_label',
-	function ( $label, $url ) {
+	// $url is part of the filter signature (arity 2) but unused by this callback.
+	function ( $label, $url ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		if ( is_singular( 'ec_doc' ) || is_post_type_archive( 'ec_doc' ) || is_tax( 'ec_doc_platform' ) ) {
 			return '← Back to Documentation';
 		}

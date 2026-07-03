@@ -143,7 +143,8 @@ function extrachill_docs_load_platform_map(): array {
 		return array();
 	}
 
-	$yaml = file_get_contents( $path );
+	// Local plugin-bundled YAML read (not a remote URL); WP_Filesystem/wp_remote_get do not apply.
+	$yaml = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 	if ( false === $yaml ) {
 		return array();
 	}

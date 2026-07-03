@@ -396,7 +396,8 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			$uploads = wp_upload_dir();
 			if ( empty( $uploads['error'] ) ) {
 				$log_path = trailingslashit( $uploads['basedir'] ) . sprintf( 'extrachill-docs-migration-%s.log', gmdate( 'Ymd-His' ) );
-				file_put_contents( $log_path, wp_json_encode( $summary, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) );
+				// One-shot WP-CLI migration log write to the uploads dir; WP_Filesystem is unnecessary ceremony here.
+				file_put_contents( $log_path, wp_json_encode( $summary, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 				\WP_CLI::log( sprintf( 'Migration log written to: %s', $log_path ) );
 			}
 		}
